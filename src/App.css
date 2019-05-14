@@ -1,33 +1,128 @@
+body {
+  font-family: arial,sans-serif;
+  color: #202124;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 100vh;
+  align-items: center;
+}
+.wrap {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+
+#copy {
+  color: #777;
+  font-size: 13px;
+  position: relative;
+  right: 48px;
+  text-align: right;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.result {
+  height: 60px;
+  background-color: #bbb;
+  width: 100%;
+}
+
+.result p {
+  font-size: 40px;
+  margin: 5px;
+
+}
+
+.display {
+  background-color: #fff;
+  color: #3C4043;
+  text-align: right;
+  font-weight: 200;
+  flex: 0 0 auto;
+  width: 400px;
+  overflow: hidden;
+  grid-column: 1 / 6;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 7px 14px;
+  font-size: 30px;
+}
+.display:hover {
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.2) inset;
+  border-color: #ccc;
+}
+.display.active {
+  border-color: #4d90fe;
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.2) inset;
+}
+
+.expression {
+  white-space: nowrap;
+  float: right;
+}
+
+.calculator  {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: auto auto auto auto auto;
+}
+
+button {
+  color: #202124;
+  font-size: 16px;
+  background-color: #dfe1e5;
+  border-color: #dfe1e5;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 8px 20px;
+  outline: none;
+}
+button:hover {
+  background: #d7d9dd;
+  border-color: #d7d9dd;
+}
+
+button.orange {
+  background-color: #FF9800;
+  border-color: #FF9800;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+button.orange:hover {
+  background-color: #ffa21c;
+  border-color: #ffa21c;
+}
+button.digit {
+  background: #f1f3f4;
+}
+button.digit:hover {
+  background: #e8eaeb;
+  border-color: #e8eaeb;
+}
+button.equal {
+  background: #4285f4;
+  border-color: #4285f4;
+  color: #fff;
+  font-weight: bold;
+}
+button.equal:hover {
+  background: #4f8fff;
+  background-color: #4f8fff;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+sup {
+  font-size: 12px;
+}
+.cubic sup {
+  position: relative;
+  left: 5px;
 }
