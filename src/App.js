@@ -8,13 +8,34 @@ class App extends Component {
 
   setOperation = operation => {
     this.setState(state => {
-      return {
-        expression:
+      let expression = state.expression;
+      let decimals = state.decimals;
+      let keyboardActive = state.keyboardActive;
+
+      if (
+        ![".", "(", "-"].includes(helper.getLastCharacter(state.expression)) ||
+        (helper.getLastCharacter(state.expression) === "-" &&
+          helper.getCharBeforeLastChar(state.expression) !== "(")
+      ) {
+        expression =
           (state.operation
             ? helper.removeLastCharacter(state.expression)
-            : state.expression) + operation,
+            : state.expression) + operation;
+        decimals = false;
+      } else if (
+        helper.getLastCharacter(state.expression) === "(" &&
+        operation === "-"
+      ) {
+        expression = state.expression + operation;
+      } else {
+        keyboardActive = true;
+      }
+
+      return {
+        keyboardActive,
+        expression,
         operation,
-        decimals: false
+        decimals
       };
     });
   };
@@ -98,10 +119,51 @@ class App extends Component {
         newState.decimals = false;
       } else if (helper.isDigit(last) && helper.isOperation(newLast)) {
         newState.operation = newLast;
+      } else if (helper.isOpenParenthesis(last)) {
+        if (helper.hasDecimals(newState.expression)) {
+          newState.decimals = true;
+        }
       }
 
       return newState;
     });
+  };
+
+  openParenthesis = () => {
+    this.setState(state => {
+      if (helper.getLastCharacter(state.expression) === ".") {
+        state.expression = helper.removeLastCharacter(state.expression);
+      }
+      return {
+        decimals: false,
+        parentheses: {
+          ...state.parentheses,
+          opened: state.parentheses.opened + 1
+        },
+        expression: state.expression === "0" ? "(" : state.expression + "("
+      };
+    });
+  };
+
+  closeParenthesis = () => {
+    if (
+      this.state.parentheses.opened > this.state.parentheses.closed &&
+      helper.getLastCharacter(this.state.expression) !== "("
+    ) {
+      this.setState(state => {
+        if (helper.getLastCharacter(state.expression)) {
+          state.expression = helper.removeLastCharacter(state.expression);
+        }
+
+        return {
+          parentheses: {
+            ...state.parentheses,
+            closed: state.parentheses.closed + 1
+          },
+          expression: state.expression + ")"
+        };
+      });
+    }
   };
 
   handleClick = event => {
@@ -117,6 +179,10 @@ class App extends Component {
       this.setDecimalsSeparator();
     } else if (clicked === "CE") {
       this.back();
+    } else if (clicked === "(") {
+      this.openParenthesis();
+    } else if (clicked === ")") {
+      this.closeParenthesis();
     }
   };
 
@@ -128,9 +194,10 @@ class App extends Component {
 
   deactivateKeyboard = e => {
     if (
-      e.target.nodeName !== "BUTTON" &&
-      e.target.className.indexOf("display") === -1 &&
-      e.target.className.indexOf("expression") === -1
+      (e.target.nodeName !== "BUTTON" &&
+        e.target.className.indexOf("display") === -1 &&
+        e.target.className.indexOf("expression") === -1) ||
+      (e.target.nodeName === "BUTTON" && e.type === "mousedown")
     ) {
       this.setState({
         keyboardActive: false
@@ -149,6 +216,9 @@ class App extends Component {
             expression={this.state.expression}
             activateKeyboard={this.activateKeyboard}
             cls={this.state.keyboardActive ? "active" : ""}
+            parentheses={this.state.parentheses}
+            onMouseDown={this.deactivateKeyboard}
+            onMouseUp={this.activateKeyboard}
           />
         </div>
       </div>

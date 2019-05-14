@@ -126,3 +126,6 @@ sup {
   position: relative;
   left: 5px;
 }
+.balancedParenthesis {
+  color: #ccc;
+}

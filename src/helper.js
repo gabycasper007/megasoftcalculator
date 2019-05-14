@@ -32,10 +32,22 @@ exports.isDecimalSeparator = s => {
   return s === ".";
 };
 
+exports.isOpenParenthesis = s => {
+  return s === "(";
+};
+
 exports.startsWithZero = s => {
   return this.getLastNumber(s).slice(0, 1) === "0";
 };
 
 exports.removeLastCharacter = s => {
   return s.slice(0, -1);
+};
+
+exports.getLastCharacter = s => {
+  return s[s.length - 1];
+};
+
+exports.getCharBeforeLastChar = s => {
+  return s[s.length - 2];
 };
