@@ -69,6 +69,7 @@ h1 {
 .expression {
   white-space: nowrap;
   float: right;
+  height: 37px;
 }
 
 .calculator  {
@@ -120,12 +121,9 @@ button.equal:hover {
 }
 
 sup {
-  font-size: 12px;
+  font-size: 11px;
 }
-.cubic sup {
-  position: relative;
-  left: 5px;
-}
+
 .balancedParenthesis {
   color: #ccc;
 }

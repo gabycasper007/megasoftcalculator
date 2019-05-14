@@ -88,6 +88,9 @@ class App extends Component {
 
   setDecimalsSeparator = () => {
     this.setState(state => {
+      if (helper.getLastCharacter(state.expression) === "!") {
+        state.expression += "*";
+      }
       return {
         ...state,
         expression: state.decimals
@@ -107,27 +110,43 @@ class App extends Component {
       let newState = {
         ...state
       };
-      const newLast = newState.expression[state.expression.length - 1];
 
       if (state.expression.length === 1) {
         newState = { ...helper.initialState };
       } else {
-        newState.expression = helper.removeLastCharacter(state.expression);
-      }
+        newState.expression = helper.removeLastCharacter(newState.expression);
+        const newLast = helper.getLastCharacter(newState.expression);
 
-      if (helper.isOperation(last)) {
-        newState.operation = "";
+        if (helper.isOperation(last)) {
+          newState.operation = "";
+        } else if (last === ".") {
+          newState.decimals = false;
+        } else if (last === ")") {
+          newState.parentheses.closed = newState.parentheses.closed - 1;
+        } else if (helper.isDigit(last) && helper.isOperation(newLast)) {
+          newState.operation = newLast;
+        } else if (last === "(") {
+          newState.parentheses.opened = newState.parentheses.opened - 1;
+
+          if (newLast === "√" || newLast === "∛") {
+            newState.expression = helper.removeLastCharacter(
+              newState.expression
+            );
+          } else if (newLast === "g") {
+            newState.expression = newState.expression.slice(
+              0,
+              newState.expression.length - 3
+            );
+          }
+
+          if (newState.expression === "") {
+            newState.expression = "0";
+          }
+        }
+
         if (helper.hasDecimals(newState.expression)) {
           newState.decimals = true;
         }
-      } else if (last === ".") {
-        newState.decimals = false;
-      } else if (helper.isDigit(last) && helper.isOperation(newLast)) {
-        newState.operation = newLast;
-      } else if (last === "(" && helper.hasDecimals(newState.expression)) {
-        newState.decimals = true;
-      } else if (last === ")") {
-        newState.parentheses.opened = state.parentheses.opened + 1;
       }
 
       return newState;
@@ -174,11 +193,14 @@ class App extends Component {
     }
   };
 
-  root = type => {
+  withParenthesis = type => {
     this.setState(state => {
       if (helper.getLastCharacter(state.expression) === ".") {
         state.expression = helper.removeLastCharacter(state.expression);
         state.decimals = false;
+      }
+      if (helper.isDigit(helper.getLastCharacter(state.expression))) {
+        state.expression += "*";
       }
       return {
         ...state,
@@ -199,11 +221,7 @@ class App extends Component {
           state.expression = helper.removeLastCharacter(state.expression);
           state.decimals = false;
         }
-        if (
-          [".", "+", "-", "*", "/"].includes(
-            helper.getLastCharacter(state.expression)
-          )
-        ) {
+        if (helper.isLastCharacterASign(state.expression)) {
           state.expression = helper.removeLastCharacter(state.expression);
         }
         return {
@@ -214,13 +232,33 @@ class App extends Component {
     }
   };
 
+  power = () => {
+    if (helper.getLastCharacter(this.state.expression) !== "(") {
+      this.setState(state => {
+        if (helper.getLastCharacter(state.expression) === ".") {
+          state.expression = helper.removeLastCharacter(state.expression);
+          state.decimals = false;
+        }
+        if (helper.isLastCharacterASign(state.expression)) {
+          state.expression = helper.removeLastCharacter(state.expression);
+        }
+        return {
+          ...state,
+          expression: state.expression ? state.expression + "^" : "0"
+        };
+      });
+    }
+  };
+
   handleClick = event => {
-    let clicked = event.target.name;
+    let clicked = event.target.name || "^";
 
     if (helper.isOperation(clicked)) {
       this.setOperation(clicked);
     } else if (helper.isDigit(clicked)) {
       this.setDigit(clicked);
+    } else if (["√", "∛", "log"].includes(clicked)) {
+      this.withParenthesis(clicked);
     } else if (clicked === "AC") {
       this.reset();
     } else if (clicked === ".") {
@@ -231,12 +269,10 @@ class App extends Component {
       this.openParenthesis();
     } else if (clicked === ")") {
       this.closeParenthesis();
-    } else if (clicked === "√") {
-      this.root("√");
-    } else if (clicked === "∛") {
-      this.root("∛");
     } else if (clicked === "!") {
       this.factorial();
+    } else if (clicked === "^") {
+      this.power();
     }
   };
 

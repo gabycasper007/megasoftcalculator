@@ -1,4 +1,5 @@
 const operations = ["-", "+", "/", "*"];
+const signs = operations.concat([".", "^"]);
 
 exports.initialState = {
   operation: "",
@@ -39,10 +40,16 @@ exports.removeLastCharacter = s => {
   return s.slice(0, -1);
 };
 
-exports.getLastCharacter = s => {
+const getLastCharacter = s => {
   return s[s.length - 1];
 };
 
+exports.getLastCharacter = getLastCharacter;
+
 exports.getCharBeforeLastChar = s => {
   return s[s.length - 2];
+};
+
+exports.isLastCharacterASign = s => {
+  return signs.includes(getLastCharacter(s));
 };
