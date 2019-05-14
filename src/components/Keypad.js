@@ -1,11 +1,18 @@
 import React, { PureComponent } from "react";
+import Button from "./Button";
 
-class KeyPadComponent extends PureComponent {
+class KeyPad extends PureComponent {
   render() {
     const missingParentheses =
       this.props.parentheses.opened - this.props.parentheses.closed;
 
     let closedP = "";
+    let buttons = ["√", "(", ")", "CE", "AC"];
+    buttons = buttons.concat("∛", "1", "2", "3", "/");
+    buttons = buttons.concat("^", "4", "5", "6", "*");
+    buttons = buttons.concat("!", "7", "8", "9", "-");
+    buttons = buttons.concat("log", ".", "0", "=", "+");
+
     for (let i = 0; i < missingParentheses; i++) {
       closedP += ")";
     }
@@ -21,231 +28,18 @@ class KeyPadComponent extends PureComponent {
             <span className="balancedParenthesis">{closedP}</span>
           </div>
         </div>
-        <button
-          name="√"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          √
-        </button>
-        <button
-          name="("
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          (
-        </button>
-        <button
-          name=")"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          )
-        </button>
-        <button
-          name="CE"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          CE
-        </button>
-        <button
-          className="orange"
-          name="AC"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          AC
-        </button>
-
-        <button
-          name="∛"
-          className="cubic"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          ∛
-        </button>
-        <button
-          name="1"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          1
-        </button>
-        <button
-          name="2"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          2
-        </button>
-        <button
-          name="3"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          3
-        </button>
-        <button
-          className="orange"
-          name="+"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          +
-        </button>
-
-        <button
-          name="^"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          x<sup name="^">y</sup>
-        </button>
-        <button
-          name="4"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          4
-        </button>
-        <button
-          name="5"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          5
-        </button>
-        <button
-          name="6"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          6
-        </button>
-        <button
-          className="orange"
-          name="-"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          -
-        </button>
-
-        <button
-          name="!"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          x!
-        </button>
-        <button
-          name="7"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          7
-        </button>
-        <button
-          name="8"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          8
-        </button>
-        <button
-          name="9"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          9
-        </button>
-        <button
-          className="orange"
-          name="*"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          x
-        </button>
-
-        <button
-          name="log"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          log
-        </button>
-        <button
-          name="."
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          .
-        </button>
-        <button
-          name="0"
-          className="digit"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          0
-        </button>
-        <button
-          name="="
-          className="equal"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          =
-        </button>
-        <button
-          className="orange"
-          name="/"
-          onClick={this.props.onClick}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          ÷
-        </button>
+        {buttons.map(button => (
+          <Button
+            name={button}
+            key={button}
+            onClick={this.props.onClick}
+            onMouseDown={this.props.onMouseDown}
+            onMouseUp={this.props.onMouseUp}
+          />
+        ))}
       </div>
     );
   }
 }
 
-export default KeyPadComponent;
+export default KeyPad;

@@ -17,7 +17,7 @@ exports.hasDecimals = s => {
 };
 
 exports.getLastNumber = s => {
-  const split = s.split(/[^\d\.]+/);
+  const split = s.split(/[^\d.]+/);
   return split[split.length - 1];
 };
 
