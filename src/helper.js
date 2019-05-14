@@ -31,11 +31,6 @@ exports.isOperation = s => {
 exports.isDecimalSeparator = s => {
   return s === ".";
 };
-
-exports.isOpenParenthesis = s => {
-  return s === "(";
-};
-
 exports.startsWithZero = s => {
   return this.getLastNumber(s).slice(0, 1) === "0";
 };

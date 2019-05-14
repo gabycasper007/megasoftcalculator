@@ -22,7 +22,7 @@ class KeyPadComponent extends PureComponent {
           </div>
         </div>
         <button
-          name="square"
+          name="√"
           onClick={this.props.onClick}
           onMouseDown={this.props.onMouseDown}
           onMouseUp={this.props.onMouseUp}
@@ -64,7 +64,7 @@ class KeyPadComponent extends PureComponent {
         </button>
 
         <button
-          name="cubic"
+          name="∛"
           className="cubic"
           onClick={this.props.onClick}
           onMouseDown={this.props.onMouseDown}
@@ -155,7 +155,7 @@ class KeyPadComponent extends PureComponent {
         </button>
 
         <button
-          name="factorial"
+          name="!"
           onClick={this.props.onClick}
           onMouseDown={this.props.onMouseDown}
           onMouseUp={this.props.onMouseUp}

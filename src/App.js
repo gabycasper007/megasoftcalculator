@@ -32,6 +32,7 @@ class App extends Component {
       }
 
       return {
+        ...state,
         keyboardActive,
         expression,
         operation,
@@ -52,6 +53,8 @@ class App extends Component {
         } else {
           expression = digit;
         }
+      } else if (helper.getLastCharacter(expression) === "!") {
+        expression += "*" + digit;
       } else if (digit === "0") {
         if (
           helper.hasDecimals(expression) ||
@@ -60,13 +63,14 @@ class App extends Component {
           expression += digit;
         }
       } else {
-        if (expression[expression.length - 1] === "0") {
+        if (helper.getLastCharacter(expression) === "0") {
           expression = helper.removeLastCharacter(expression);
         }
         expression += digit;
       }
 
       return {
+        ...state,
         expression,
         operation: ""
       };
@@ -85,6 +89,7 @@ class App extends Component {
   setDecimalsSeparator = () => {
     this.setState(state => {
       return {
+        ...state,
         expression: state.decimals
           ? state.expression
           : state.expression === "0"
@@ -97,7 +102,7 @@ class App extends Component {
 
   back = () => {
     this.setState(state => {
-      const last = state.expression[state.expression.length - 1];
+      const last = helper.getLastCharacter(state.expression);
 
       let newState = {
         ...state
@@ -115,14 +120,14 @@ class App extends Component {
         if (helper.hasDecimals(newState.expression)) {
           newState.decimals = true;
         }
-      } else if (helper.isDecimalSeparator(last)) {
+      } else if (last === ".") {
         newState.decimals = false;
       } else if (helper.isDigit(last) && helper.isOperation(newLast)) {
         newState.operation = newLast;
-      } else if (helper.isOpenParenthesis(last)) {
-        if (helper.hasDecimals(newState.expression)) {
-          newState.decimals = true;
-        }
+      } else if (last === "(" && helper.hasDecimals(newState.expression)) {
+        newState.decimals = true;
+      } else if (last === ")") {
+        newState.parentheses.opened = state.parentheses.opened + 1;
       }
 
       return newState;
@@ -151,7 +156,10 @@ class App extends Component {
       helper.getLastCharacter(this.state.expression) !== "("
     ) {
       this.setState(state => {
-        if (helper.getLastCharacter(state.expression)) {
+        if (
+          helper.getLastCharacter(state.expression) === "." ||
+          helper.isOperation(helper.getLastCharacter(state.expression))
+        ) {
           state.expression = helper.removeLastCharacter(state.expression);
         }
 
@@ -161,6 +169,46 @@ class App extends Component {
             closed: state.parentheses.closed + 1
           },
           expression: state.expression + ")"
+        };
+      });
+    }
+  };
+
+  root = type => {
+    this.setState(state => {
+      if (helper.getLastCharacter(state.expression) === ".") {
+        state.expression = helper.removeLastCharacter(state.expression);
+        state.decimals = false;
+      }
+      return {
+        ...state,
+        expression:
+          state.expression === "0" ? type + "(" : state.expression + type + "(",
+        parentheses: {
+          ...state.parentheses,
+          opened: state.parentheses.opened + 1
+        }
+      };
+    });
+  };
+
+  factorial = () => {
+    if (helper.getLastCharacter(this.state.expression) !== "(") {
+      this.setState(state => {
+        if (helper.getLastCharacter(state.expression) === ".") {
+          state.expression = helper.removeLastCharacter(state.expression);
+          state.decimals = false;
+        }
+        if (
+          [".", "+", "-", "*", "/"].includes(
+            helper.getLastCharacter(state.expression)
+          )
+        ) {
+          state.expression = helper.removeLastCharacter(state.expression);
+        }
+        return {
+          ...state,
+          expression: state.expression ? state.expression + "!" : "0"
         };
       });
     }
@@ -183,6 +231,12 @@ class App extends Component {
       this.openParenthesis();
     } else if (clicked === ")") {
       this.closeParenthesis();
+    } else if (clicked === "√") {
+      this.root("√");
+    } else if (clicked === "∛") {
+      this.root("∛");
+    } else if (clicked === "!") {
+      this.factorial();
     }
   };
 
