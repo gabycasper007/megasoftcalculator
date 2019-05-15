@@ -3,11 +3,13 @@ import * as helper from "./helper.js";
 const setOperation = (state, operation) => {
   let expression = state.expression;
   let decimals = state.decimals;
-  let keyboardActive = state.keyboardActive;
 
-  if (
+  if (expression === "0" && operation === "-") {
+    expression = "-";
+  } else if (
     ![".", "(", "-"].includes(helper.getLastCharacter(state.expression)) ||
     (state.expression.endsWith("-") &&
+      state.expression !== "-" &&
       helper.getCharBeforeLastChar(state.expression) !== "(")
   ) {
     expression =
@@ -17,13 +19,9 @@ const setOperation = (state, operation) => {
     decimals = false;
   } else if (state.expression.endsWith("(") && operation === "-") {
     expression = state.expression + operation;
-  } else {
-    keyboardActive = true;
   }
-
   return {
     ...state,
-    keyboardActive,
     expression,
     operation,
     decimals
