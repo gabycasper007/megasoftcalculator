@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Component } from "react";
 import "./App.css";
 import Keypad from "./components/Keypad";
@@ -6,6 +7,15 @@ import * as updaters from "./updaters";
 
 class App extends Component {
   state = { ...helper.initialState };
+
+  constructor(props) {
+    super(props);
+
+    this.axios = axios.create({
+      baseURL: `http://localhost:8080`,
+      timeout: 5000
+    });
+  }
 
   handleClick = event => {
     let clicked = event.target.name || "^";
@@ -31,10 +41,25 @@ class App extends Component {
       ) {
         this.setState(updaters.closeParenthesis);
       }
+    } else if (clicked === "=") {
+      if (this.state.expression !== "0") {
+        this.handleEqual();
+      }
     } else {
       if (!this.state.expression.endsWith("(")) {
         this.setState(state => updaters.setFactorialOrPower(state, clicked));
       }
+    }
+  };
+
+  handleEqual = async () => {
+    try {
+      let response = await this.axios.post("/equal", {
+        expression: this.state.expression
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
