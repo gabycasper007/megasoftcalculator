@@ -8,8 +8,20 @@ exports.default = class Expression {
     return this;
   }
 
+  replaceFuncs() {
+    this.expression = this.expression.replace("sqrt", "√");
+    this.expression = this.expression.replace("cbrt", "∛");
+  }
+
+  addParenthesesForRoots() {
+    this.expression = this.expression.replace(/(√|∛)(-?[\d.])+/g, "$1($2)");
+  }
+
   calculate() {
     this.removeSpaces();
+    this.replaceFuncs();
+    this.addParenthesesForRoots();
+
     let result = this.calculateInsideParentheses(this.expression);
 
     return this.roundToMaxTenDecimals(result);
@@ -17,15 +29,26 @@ exports.default = class Expression {
 
   calculateInsideParentheses(s) {
     s = this.balanceParentheses(s);
+
     let start = s.lastIndexOf("(");
     let end = start + s.substr(start).indexOf(")");
-    let result;
+    let result, left, middle;
 
     if (start > -1) {
+      middle = s.substr(start + 1, end - 1);
+
+      left = s.substr(0, start - 1);
+      if (s[start - 1] === "√") {
+        middle = Math.sqrt(this.calculateInsideParentheses(middle));
+      } else if (s[start - 1] === "∛") {
+        middle = Math.cbrt(this.calculateInsideParentheses(middle));
+      } else {
+        left = s.substr(0, start);
+        middle = this.calculateInsideParentheses(middle);
+      }
+
       result = this.calculateInsideParentheses(
-        s.substr(0, start) +
-          this.calculateInsideParentheses(s.substr(start + 1, end - 1)) +
-          s.substr(end + 1)
+        left + middle + s.substr(end + 1)
       );
 
       return result;
@@ -67,6 +90,10 @@ exports.default = class Expression {
         missing--;
       }
     }
+
+    // This parenthesis just helps Bracket Pair Colorizer Plugin
+    // to work correctly, which was broken because
+    // of the next one "("
 
     return missing > 0 ? s + ")".repeat(missing) : s;
   }

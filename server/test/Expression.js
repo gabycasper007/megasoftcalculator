@@ -32,7 +32,7 @@ describe("Expression", function() {
   });
 
   describe("completeOperation", function() {
-    it("calculate one instance", function() {
+    it("should calculate one instance", function() {
       let testCases = [
         {
           numbers: [2, 4, 8, 4, 3, 7, 2, 8],
@@ -68,7 +68,7 @@ describe("Expression", function() {
   });
 
   describe("getOperators", function() {
-    it("should retrieve just operators", function() {
+    it("should retrieve only operators", function() {
       let expression = new Expression("");
       expect(expression.getOperators("1/3+24+5*-8/3").join(" ")).to.equal(
         "/ + + * /"
@@ -80,7 +80,7 @@ describe("Expression", function() {
     });
   });
 
-  it("should calculate correctly", function() {
+  it("should calculate basic operations", function() {
     let testCases = [
       { given: "1.52/.8*0.6-12.5+95", result: 83.64 },
       { given: "12-1.52/.8+95*0.2", result: 29.1 },
@@ -90,10 +90,7 @@ describe("Expression", function() {
       { given: "   2 + 4 * 8 + 4 / 3 - 7 * 2 - 8  ", result: 13.3333333333 }
     ];
 
-    for (let testCase of testCases) {
-      let expression = new Expression(testCase.given);
-      expect(expression.calculate()).to.equal(testCase.result);
-    }
+    checkTestCases(testCases);
   });
 
   it("should handle parenthesis", function() {
@@ -106,9 +103,43 @@ describe("Expression", function() {
       { given: "1/(-3*(4+5)/(2*(3-8)))", result: 0.3703703704 }
     ];
 
-    for (let testCase of testCases) {
-      let expression = new Expression(testCase.given);
-      expect(expression.calculate()).to.equal(testCase.result);
-    }
+    checkTestCases(testCases);
+  });
+
+  it("should calculate square root", function() {
+    let testCases = [
+      { given: "√(5", result: 2.2360679775 },
+      { given: "√(48)", result: 6.9282032303 },
+      { given: "√(145)", result: 12.0415945788 },
+      { given: "sqrt(785.5)", result: 28.0267729145 },
+      { given: "√(144", result: 12 },
+      { given: "-√(9)", result: -3 },
+      { given: "-√(12)", result: -3.4641016151 },
+      { given: "√8", result: 2.8284271247 }
+    ];
+
+    checkTestCases(testCases);
+  });
+
+  it("should calculate cubic root", function() {
+    let testCases = [
+      { given: "∛(84", result: 4.3795191399 },
+      { given: "∛(12)", result: 2.2894284851 },
+      { given: "∛(-483)", result: -7.8460133651 },
+      { given: "cbrt(327.3)", result: 6.8915249864 },
+      { given: "-∛(27)", result: -3 },
+      { given: "-∛(12)", result: -2.2894284851 },
+      { given: "∛8", result: 2 },
+      { given: "∛-8", result: -2 }
+    ];
+
+    checkTestCases(testCases);
   });
 });
+
+function checkTestCases(testCases) {
+  for (let testCase of testCases) {
+    let expression = new Expression(testCase.given);
+    expect(expression.calculate()).to.equal(testCase.result);
+  }
+}
