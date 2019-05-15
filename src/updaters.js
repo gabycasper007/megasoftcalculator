@@ -49,9 +49,6 @@ const setDigit = (state, digit) => {
       expression += digit;
     }
   } else {
-    if (expression.endsWith("0")) {
-      expression = helper.removeLastCharacter(expression);
-    }
     expression += digit;
   }
 
