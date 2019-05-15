@@ -22,36 +22,18 @@ exports.default = class Expression {
     this.replaceFuncs();
     this.addParenthesesForRoots();
 
-    let result = this.calculateInsideParentheses(this.expression);
+    let result = this.handleParentheses(this.expression);
 
     return this.roundToMaxTenDecimals(result);
   }
 
-  calculateInsideParentheses(s) {
+  handleParentheses(s) {
     s = this.balanceParentheses(s);
 
     let start = s.lastIndexOf("(");
-    let end = start + s.substr(start).indexOf(")");
-    let result, left, middle;
 
     if (start > -1) {
-      middle = s.substr(start + 1, end - 1);
-
-      left = s.substr(0, start - 1);
-      if (s[start - 1] === "√") {
-        middle = Math.sqrt(this.calculateInsideParentheses(middle));
-      } else if (s[start - 1] === "∛") {
-        middle = Math.cbrt(this.calculateInsideParentheses(middle));
-      } else {
-        left = s.substr(0, start);
-        middle = this.calculateInsideParentheses(middle);
-      }
-
-      result = this.calculateInsideParentheses(
-        left + middle + s.substr(end + 1)
-      );
-
-      return result;
+      this.splitParentheses(s, start);
     } else {
       let obj = {
         numbers: this.getNumbers(s),
@@ -64,6 +46,26 @@ exports.default = class Expression {
 
       return obj.numbers.shift();
     }
+  }
+
+  splitParentheses(s, start) {
+    let end = start + s.substr(start).indexOf(")");
+    let result, left, middle;
+    middle = s.substr(start + 1, end - 1);
+
+    left = s.substr(0, start - 1);
+    if (s[start - 1] === "√") {
+      middle = Math.sqrt(this.handleParentheses(middle));
+    } else if (s[start - 1] === "∛") {
+      middle = Math.cbrt(this.handleParentheses(middle));
+    } else {
+      left = s.substr(0, start);
+      middle = this.handleParentheses(middle);
+    }
+
+    result = this.handleParentheses(left + middle + s.substr(end + 1));
+
+    return result;
   }
 
   getNumbers(s) {
