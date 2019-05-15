@@ -21,7 +21,7 @@ exports.default = class Expression {
     let end = start + s.substr(start).indexOf(")");
     let result;
 
-    if (~start) {
+    if (start > -1) {
       result = this.calculateInsideParentheses(
         s.substr(0, start) +
           this.calculateInsideParentheses(s.substr(start + 1, end - 1)) +
