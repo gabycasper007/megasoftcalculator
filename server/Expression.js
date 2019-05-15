@@ -33,7 +33,7 @@ exports.default = class Expression {
     let start = s.lastIndexOf("(");
 
     if (start > -1) {
-      this.splitParentheses(s, start);
+      return this.splitParentheses(s, start);
     } else {
       let obj = {
         numbers: this.getNumbers(s),
@@ -41,8 +41,8 @@ exports.default = class Expression {
       };
       obj.operators.length = obj.numbers.length - 1;
 
-      this.executeOperation(obj, "*", "/");
-      this.executeOperation(obj, "+", "-");
+      this.executeOperations(obj, "*", "/");
+      this.executeOperations(obj, "+", "-");
 
       return obj.numbers.shift();
     }
@@ -50,10 +50,9 @@ exports.default = class Expression {
 
   splitParentheses(s, start) {
     let end = start + s.substr(start).indexOf(")");
-    let result, left, middle;
-    middle = s.substr(start + 1, end - 1);
+    let middle = s.substr(start + 1, end - 1);
+    let left = s.substr(0, start - 1);
 
-    left = s.substr(0, start - 1);
     if (s[start - 1] === "√") {
       middle = Math.sqrt(this.handleParentheses(middle));
     } else if (s[start - 1] === "∛") {
@@ -63,9 +62,7 @@ exports.default = class Expression {
       middle = this.handleParentheses(middle);
     }
 
-    result = this.handleParentheses(left + middle + s.substr(end + 1));
-
-    return result;
+    return this.handleParentheses(left + middle + s.substr(end + 1));
   }
 
   getNumbers(s) {
@@ -100,7 +97,7 @@ exports.default = class Expression {
     return missing > 0 ? s + ")".repeat(missing) : s;
   }
 
-  executeOperation(obj, ...ops) {
+  executeOperations(obj, ...ops) {
     let result;
     for (let i = 0, n = obj.operators.length; i < n; i++) {
       let op = obj.operators[i];
