@@ -5,7 +5,7 @@ exports.default = class Expression {
 
   calculate() {
     this.removeSpaces();
-    this.replaceFuncs();
+    this.replaceFuncNames();
     this.addParenthesesForRootsAndLogs();
 
     let result = this.handleParentheses(this.expression);
@@ -22,6 +22,7 @@ exports.default = class Expression {
       return this.splitParentheses(expression, start);
     } else {
       expression = this.executeFactorial(expression);
+      expression = this.executePower(expression);
 
       let obj = {
         numbers: this.getNumbers(expression),
@@ -58,18 +59,49 @@ exports.default = class Expression {
     return this.handleParentheses(left + middle + expression.substr(end + 1));
   }
 
-  extractNumberForFactorial(expression, indexOfFact) {
-    let start = indexOfFact - 1;
-    let firstIndexOfFact = indexOfFact;
+  executePower(expression) {
+    let lastIndexOfPower = expression.lastIndexOf("^");
 
-    while (start > -1 && /^[\d.!]$/.test(expression[start - 1])) {
-      if (expression[start] === "!") {
-        firstIndexOfFact = start;
+    if (lastIndexOfPower > 0) {
+      let [
+        leftNumber,
+        rightNumber,
+        leftIndex,
+        rightIndex
+      ] = this.extractNumbersForPower(expression, lastIndexOfPower);
+
+      let newExpression =
+        expression.slice(0, leftIndex) +
+        leftNumber ** rightNumber +
+        expression.slice(rightIndex);
+
+      if (newExpression.indexOf("^") > 0) {
+        return this.executePower(newExpression);
       }
+      return newExpression;
+    }
+    return expression;
+  }
+
+  extractNumbersForPower(expression, lastIndexOfPower) {
+    let start = lastIndexOfPower - 1;
+    let end = lastIndexOfPower + 1;
+    let regex = /[-\d.]/;
+
+    while (start > -1 && regex.test(expression[start - 1])) {
       start--;
     }
 
-    return [expression.slice(start, firstIndexOfFact), start];
+    while (end < expression.length && regex.test(expression[end + 1])) {
+      end++;
+    }
+
+    return [
+      expression.slice(start, lastIndexOfPower),
+      expression.slice(lastIndexOfPower + 1, end + 1),
+      start,
+      end + 1
+    ];
   }
 
   executeFactorial(expression) {
@@ -91,6 +123,20 @@ exports.default = class Expression {
       );
     }
     return expression;
+  }
+
+  extractNumberForFactorial(expression, indexOfFact) {
+    let start = indexOfFact - 1;
+    let firstIndexOfFact = indexOfFact;
+
+    while (start > -1 && /^[\d.!]$/.test(expression[start - 1])) {
+      if (expression[start] === "!") {
+        firstIndexOfFact = start;
+      }
+      start--;
+    }
+
+    return [expression.slice(start, firstIndexOfFact), start];
   }
 
   // Factorial can be double !!, triple !!!, etc.
@@ -166,6 +212,7 @@ exports.default = class Expression {
 
   balanceParentheses(expression) {
     let missing = 0;
+
     for (let i = 0, n = expression.length; i < n; i++) {
       if (expression[i] === "(") {
         missing++;
@@ -204,7 +251,7 @@ exports.default = class Expression {
     return this;
   }
 
-  replaceFuncs() {
+  replaceFuncNames() {
     this.expression = this.expression.replace("sqrt", "√");
     this.expression = this.expression.replace("cbrt", "∛");
   }

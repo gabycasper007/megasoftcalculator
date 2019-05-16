@@ -168,7 +168,6 @@ describe("Expression", function() {
       { given: "10!!", result: 3840 },
       { given: "50!!", result: 5.2046984264 },
       { given: "30!!", result: 42849873690624000 },
-
       { given: "0!!!", result: 1 },
       { given: "3!!!", result: 3 },
       { given: "5!!!", result: 10 },
@@ -176,6 +175,20 @@ describe("Expression", function() {
       { given: "3.4!", result: 10.1309057522 },
       { given: "-5.9!", result: -597.3851550984 },
       { given: "-0.4!", result: -0.8767180971 }
+    ];
+  });
+
+  it("should calculate power", function() {
+    let testCases = [
+      { given: "2^4", result: 16 },
+      { given: "0^8", result: 0 },
+      { given: "-3^3", result: -27 },
+      { given: "3^2^4", result: 43046721 },
+      { given: "14^4", result: 38416 },
+      { given: "5^12", result: 244140625 },
+      { given: "1.2^6", result: 2.985984 },
+      { given: "2.1^-2", result: 0.2267573696 },
+      { given: "(-45)^2", result: 2025 }
     ];
 
     checkTestCases(testCases);
