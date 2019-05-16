@@ -13,14 +13,14 @@ exports.default = class Expression {
     this.expression = this.expression.replace("cbrt", "∛");
   }
 
-  addParenthesesForRoots() {
-    this.expression = this.expression.replace(/(√|∛)(-?[\d.])+/g, "$1($2)");
+  addParenthesesForRootsAndLogs() {
+    this.expression = this.expression.replace(/(√|∛|g)(-?[\d.])+/g, "$1($2)");
   }
 
   calculate() {
     this.removeSpaces();
     this.replaceFuncs();
-    this.addParenthesesForRoots();
+    this.addParenthesesForRootsAndLogs();
 
     let result = this.handleParentheses(this.expression);
 
@@ -51,12 +51,17 @@ exports.default = class Expression {
   splitParentheses(s, start) {
     let end = start + s.substr(start).indexOf(")");
     let middle = s.substr(start + 1, end - 1);
-    let left = s.substr(0, start - 1);
+    let left;
 
     if (s[start - 1] === "√") {
+      left = s.substr(0, start - 1);
       middle = Math.sqrt(this.handleParentheses(middle));
     } else if (s[start - 1] === "∛") {
+      left = s.substr(0, start - 1);
       middle = Math.cbrt(this.handleParentheses(middle));
+    } else if (s[start - 1] === "g") {
+      left = s.substr(0, start - 3);
+      middle = Math.log10(this.handleParentheses(middle));
     } else {
       left = s.substr(0, start);
       middle = this.handleParentheses(middle);

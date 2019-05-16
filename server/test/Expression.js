@@ -135,6 +135,19 @@ describe("Expression", function() {
 
     checkTestCases(testCases);
   });
+
+  it("should calculate logs", function() {
+    let testCases = [
+      { given: "log(84", result: 1.9242792861 },
+      { given: "log(12)", result: 1.079181246 },
+      { given: "log(327.3)", result: 2.5149460053 },
+      { given: "-log(27)", result: -1.4313637642 },
+      { given: "-log(12", result: -1.079181246 },
+      { given: "log8", result: 0.903089987 }
+    ];
+
+    checkTestCases(testCases);
+  });
 });
 
 function checkTestCases(testCases) {
