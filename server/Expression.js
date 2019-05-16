@@ -3,20 +3,6 @@ exports.default = class Expression {
     this.expression = expression;
   }
 
-  removeSpaces() {
-    this.expression = this.expression.replace(/\s+/g, "");
-    return this;
-  }
-
-  replaceFuncs() {
-    this.expression = this.expression.replace("sqrt", "√");
-    this.expression = this.expression.replace("cbrt", "∛");
-  }
-
-  addParenthesesForRootsAndLogs() {
-    this.expression = this.expression.replace(/(√|∛|g)(-?[\d.])+/g, "$1($2)");
-  }
-
   calculate() {
     this.removeSpaces();
     this.replaceFuncs();
@@ -27,82 +13,119 @@ exports.default = class Expression {
     return this.roundToMaxTenDecimals(result);
   }
 
-  handleParentheses(s) {
-    s = this.balanceParentheses(s);
+  handleParentheses(expression) {
+    expression = this.balanceParentheses(expression);
 
-    let start = s.lastIndexOf("(");
+    let start = expression.lastIndexOf("(");
 
     if (start > -1) {
-      return this.splitParentheses(s, start);
+      return this.splitParentheses(expression, start);
     } else {
+      expression = this.executeFactorial(expression);
+
       let obj = {
-        numbers: this.getNumbers(s),
-        operators: this.getOperators(s)
+        numbers: this.getNumbers(expression),
+        operators: this.getOperators(expression)
       };
       obj.operators.length = obj.numbers.length - 1;
 
-      this.executeOperations(obj, "*", "/");
-      this.executeOperations(obj, "+", "-");
+      this.executeBasicOperations(obj, "*", "/");
+      this.executeBasicOperations(obj, "+", "-");
 
       return obj.numbers.shift();
     }
   }
 
-  splitParentheses(s, start) {
-    let end = start + s.substr(start).indexOf(")");
-    let middle = s.substr(start + 1, end - 1);
+  splitParentheses(expression, start) {
+    let end = start + expression.substr(start).indexOf(")");
+    let middle = expression.substr(start + 1, end - 1);
     let left;
 
-    if (s[start - 1] === "√") {
-      left = s.substr(0, start - 1);
+    if (expression[start - 1] === "√") {
+      left = expression.substr(0, start - 1);
       middle = Math.sqrt(this.handleParentheses(middle));
-    } else if (s[start - 1] === "∛") {
-      left = s.substr(0, start - 1);
+    } else if (expression[start - 1] === "∛") {
+      left = expression.substr(0, start - 1);
       middle = Math.cbrt(this.handleParentheses(middle));
-    } else if (s[start - 1] === "g") {
-      left = s.substr(0, start - 3);
+    } else if (expression[start - 1] === "g") {
+      left = expression.substr(0, start - 3);
       middle = Math.log10(this.handleParentheses(middle));
     } else {
-      left = s.substr(0, start);
+      left = expression.substr(0, start);
       middle = this.handleParentheses(middle);
     }
 
-    return this.handleParentheses(left + middle + s.substr(end + 1));
+    return this.handleParentheses(left + middle + expression.substr(end + 1));
   }
 
-  getNumbers(s) {
-    let result = s
-      .split(/(?!^-)(?<![-+/*)])[-+/*]/)
-      .filter(x => x)
-      .map(x => parseFloat(x));
+  extractNumberForFactorial(expression, indexOfFact) {
+    let start = indexOfFact - 1;
+    let firstIndexOfFact = indexOfFact;
 
-    return result;
-  }
-
-  getOperators(s) {
-    let result = s.split(/[\d.]+|(?<![\d.])-[\d.]+/).filter(x => x);
-
-    return result;
-  }
-
-  balanceParentheses(s) {
-    let missing = 0;
-    for (let i = 0, n = s.length; i < n; i++) {
-      if (s[i] === "(") {
-        missing++;
-      } else if (s[i] === ")") {
-        missing--;
+    while (start > -1 && /^[\d.!]$/.test(expression[start - 1])) {
+      if (expression[start] === "!") {
+        firstIndexOfFact = start;
       }
+      start--;
     }
 
-    // This parenthesis just helps Bracket Pair Colorizer Plugin
-    // to work correctly, which was broken because
-    // of the next one "("
-
-    return missing > 0 ? s + ")".repeat(missing) : s;
+    return [expression.slice(start, firstIndexOfFact), start];
   }
 
-  executeOperations(obj, ...ops) {
+  executeFactorial(expression) {
+    let lastIndexOfFact = expression.lastIndexOf("!");
+
+    if (lastIndexOfFact > 0) {
+      let [newExpression, start] = this.extractNumberForFactorial(
+        expression,
+        lastIndexOfFact
+      );
+
+      return (
+        expression.slice(0, start) +
+        this.multiFactorial(
+          newExpression,
+          this.getFactorialType(expression, newExpression, start)
+        ) +
+        expression.slice(lastIndexOfFact + 1)
+      );
+    }
+    return expression;
+  }
+
+  // Factorial can be double !!, triple !!!, etc.
+  getFactorialType(expression, newExpression, start) {
+    let multi = expression.length - newExpression.length;
+    if (expression[start - 1] === "-") {
+      multi--;
+    }
+    return multi;
+  }
+
+  multiFactorial(number, multi) {
+    let result = 1;
+    number = parseFloat(number);
+
+    if (Number.isInteger(number)) {
+      for (let i = number; i > 1; i -= multi) {
+        result *= i;
+      }
+    } else {
+      result = this.gosperApproximation(number);
+    }
+
+    return result.toString();
+  }
+
+  gosperApproximation(number) {
+    let eulerNumber = 2.7182818284590452353602874713527;
+    return (
+      (number / eulerNumber) ** number *
+      Math.sqrt(Math.PI * (2 * number + 1 / 3))
+    );
+  }
+
+  executeBasicOperations(obj, ...ops) {
     let result;
     for (let i = 0, n = obj.operators.length; i < n; i++) {
       let op = obj.operators[i];
@@ -126,6 +149,38 @@ exports.default = class Expression {
     return result;
   }
 
+  getNumbers(expression) {
+    let result = expression
+      .split(/(?!^-)(?<![-+/*)])[-+/*]/)
+      .filter(x => x)
+      .map(x => parseFloat(x));
+
+    return result;
+  }
+
+  getOperators(expression) {
+    let result = expression.split(/[\d.]+|(?<![\d.])-[\d.]+/).filter(x => x);
+
+    return result;
+  }
+
+  balanceParentheses(expression) {
+    let missing = 0;
+    for (let i = 0, n = expression.length; i < n; i++) {
+      if (expression[i] === "(") {
+        missing++;
+      } else if (expression[i] === ")") {
+        missing--;
+      }
+    }
+
+    // This parenthesis just helps Bracket Pair Colorizer Plugin
+    // to work correctly, which was broken because
+    // of the next one "("
+
+    return missing > 0 ? expression + ")".repeat(missing) : expression;
+  }
+
   removeUsedNumbersAndOperators(obj, index, result) {
     obj.operators = this.arrayRemoveByIndex(obj.operators, index);
 
@@ -142,5 +197,19 @@ exports.default = class Expression {
 
   arrayRemoveByIndex(arr, ...indexes) {
     return arr.filter((elem, index) => !indexes.includes(index));
+  }
+
+  removeSpaces() {
+    this.expression = this.expression.replace(/\s+/g, "");
+    return this;
+  }
+
+  replaceFuncs() {
+    this.expression = this.expression.replace("sqrt", "√");
+    this.expression = this.expression.replace("cbrt", "∛");
+  }
+
+  addParenthesesForRootsAndLogs() {
+    this.expression = this.expression.replace(/(√|∛|g)(-?[\d.])+/g, "$1($2)");
   }
 };

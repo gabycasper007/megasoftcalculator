@@ -51,8 +51,8 @@ describe("Expression", function() {
       for (let testCase of testCases) {
         let expression = new Expression("");
         let obj = {
-          numbers: [...testCase.numbers],
-          operators: [...testCase.operators]
+          numbers: testCase.numbers,
+          operators: testCase.operators
         };
 
         obj = expression.removeUsedNumbersAndOperators(
@@ -146,6 +146,36 @@ describe("Expression", function() {
       { given: "-log(27)", result: -1.4313637642 },
       { given: "-log(12", result: -1.079181246 },
       { given: "log8", result: 0.903089987 }
+    ];
+
+    checkTestCases(testCases);
+  });
+
+  it("should calculate factorials", function() {
+    let testCases = [
+      { given: "-4!", result: -24 },
+      { given: "7!", result: 5040 },
+      { given: "10!", result: 3628800 },
+      { given: "100!", result: 9.3326215444 },
+      { given: "170!", result: 7.2574156153 },
+      { given: "171!", result: Infinity },
+      { given: "2!", result: 2 },
+      { given: "1!", result: 1 },
+      { given: "0!", result: 1 },
+      { given: "0!!", result: 1 },
+      { given: "3!!", result: 3 },
+      { given: "4!!", result: 8 },
+      { given: "10!!", result: 3840 },
+      { given: "50!!", result: 5.2046984264 },
+      { given: "30!!", result: 42849873690624000 },
+
+      { given: "0!!!", result: 1 },
+      { given: "3!!!", result: 3 },
+      { given: "5!!!", result: 10 },
+      { given: "10!!!", result: 280 },
+      { given: "3.4!", result: 10.1309057522 },
+      { given: "-5.9!", result: -597.3851550984 },
+      { given: "-0.4!", result: -0.8767180971 }
     ];
 
     checkTestCases(testCases);
