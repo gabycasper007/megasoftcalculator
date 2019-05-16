@@ -1,6 +1,13 @@
 const Expression = require("../Expression").default;
 
-module.exports.equal = (req, res) => {
-  let expression = new Expression(req.body.expression);
-  res.json(expression.calculate());
+module.exports.send = (req, res, next) => {
+  try {
+    let expression = new Expression(req.body.expression);
+    res.json(expression.calculate());
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
 };

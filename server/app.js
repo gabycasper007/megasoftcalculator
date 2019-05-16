@@ -1,6 +1,15 @@
 const express = require("express");
-const controller = require("./controllers/equal");
+const equalController = require("./controllers/equal");
+const historyController = require("./controllers/history");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
+const DB_USER = process.env.DB_USER || "gabriellvasile";
+const DB_NAME = process.env.DB_NAME || "calculator";
+const DB_PASSWORD = process.env.DB_PASSWORD || "1zZM2cEN0QyxmopR";
+const dbLink =
+  process.env.DB_CONNECTION_STRING ||
+  `mongodb+srv://${DB_USER}:${DB_PASSWORD}@mongotut-sxsgb.mongodb.net/${DB_NAME}?retryWrites=true`;
 
 const app = express();
 const port = 8080;
@@ -22,6 +31,15 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: error.message, data: error.data });
 });
 
-app.post("/equal", controller.equal);
+// Routes
+app.post("/equal", equalController.send);
+app.put("/history", historyController.save);
 
-app.listen(port);
+mongoose
+  .connect(dbLink, { useNewUrlParser: true })
+  .then(() => {
+    app.listen(port);
+  })
+  .catch(error => {
+    console.log(error);
+  });

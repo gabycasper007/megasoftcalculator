@@ -148,6 +148,7 @@ exports.default = class Expression {
     return multi;
   }
 
+  // See http://mathworld.wolfram.com/Multifactorial.html
   calculateMultiFactorial(number, multi) {
     let result = 1;
     number = parseFloat(number);
