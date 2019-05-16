@@ -118,7 +118,7 @@ exports.default = class Expression {
           result = obj.numbers[i] - obj.numbers[i + 1];
         }
 
-        this.completeOperation(obj, i, result);
+        this.removeUsedNumbersAndOperators(obj, i, result);
         i--;
       }
     }
@@ -126,8 +126,8 @@ exports.default = class Expression {
     return result;
   }
 
-  completeOperation(obj, index, result) {
-    obj.operators = this.arrayRemove(obj.operators, index);
+  removeUsedNumbersAndOperators(obj, index, result) {
+    obj.operators = this.arrayRemoveByIndex(obj.operators, index);
 
     obj.numbers = obj.numbers
       .slice(0, index)
@@ -140,21 +140,7 @@ exports.default = class Expression {
     return Math.round(number * 1e10) / 1e10;
   }
 
-  arrayRemove(arr, ...indexes) {
+  arrayRemoveByIndex(arr, ...indexes) {
     return arr.filter((elem, index) => !indexes.includes(index));
-  }
-
-  setNumbers(numbers) {
-    this.expression = {
-      ...this.expression,
-      numbers
-    };
-  }
-
-  setOperators(operators) {
-    this.expression = {
-      ...this.expression,
-      operators
-    };
   }
 };

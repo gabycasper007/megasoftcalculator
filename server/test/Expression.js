@@ -2,7 +2,7 @@ const expect = require("chai").expect;
 const Expression = require("../Expression").default;
 
 describe("Expression", function() {
-  describe("arrayRemove", function() {
+  describe("arrayRemoveByIndex", function() {
     it("should remove", function() {
       let testCases = [
         {
@@ -25,13 +25,15 @@ describe("Expression", function() {
       for (let testCase of testCases) {
         let expression = new Expression("");
         expect(
-          expression.arrayRemove(testCase.arr, ...testCase.indexes).join("")
+          expression
+            .arrayRemoveByIndex(testCase.arr, ...testCase.indexes)
+            .join("")
         ).to.equal(testCase.result.join(""));
       }
     });
   });
 
-  describe("completeOperation", function() {
+  describe("removeUsedNumbersAndOperators", function() {
     it("should calculate one instance", function() {
       let testCases = [
         {
@@ -48,19 +50,19 @@ describe("Expression", function() {
 
       for (let testCase of testCases) {
         let expression = new Expression("");
+        let obj = {
+          numbers: [...testCase.numbers],
+          operators: [...testCase.operators]
+        };
 
-        expression.setNumbers(testCase.numbers);
-        expression.setOperators(testCase.operators);
-        expression = expression.completeOperation(
+        obj = expression.removeUsedNumbersAndOperators(
           testCase,
           testCase.index,
           testCase.calculated
         );
 
-        expect(expression.numbers.join("")).to.equal(
-          testCase.result.numbers.join("")
-        );
-        expect(expression.operators.join("")).to.equal(
+        expect(obj.numbers.join("")).to.equal(testCase.result.numbers.join(""));
+        expect(obj.operators.join("")).to.equal(
           testCase.result.operators.join("")
         );
       }
