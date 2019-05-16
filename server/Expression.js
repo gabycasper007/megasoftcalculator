@@ -115,7 +115,7 @@ exports.default = class Expression {
 
       return (
         expression.slice(0, start) +
-        this.multiFactorial(
+        this.calculateMultiFactorial(
           newExpression,
           this.getFactorialType(expression, newExpression, start)
         ) +
@@ -148,7 +148,7 @@ exports.default = class Expression {
     return multi;
   }
 
-  multiFactorial(number, multi) {
+  calculateMultiFactorial(number, multi) {
     let result = 1;
     number = parseFloat(number);
 
@@ -157,13 +157,14 @@ exports.default = class Expression {
         result *= i;
       }
     } else {
-      result = this.gosperApproximation(number);
+      result = this.useGosperApproximation(number);
     }
 
     return result.toString();
   }
 
-  gosperApproximation(number) {
+  // See https://radiusofcircle.blogspot.com/2015/12/factorial-of-number-using.html
+  useGosperApproximation(number) {
     let eulerNumber = 2.7182818284590452353602874713527;
     return (
       (number / eulerNumber) ** number *
