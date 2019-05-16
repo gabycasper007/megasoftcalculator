@@ -1,4 +1,4 @@
-exports.default = class Expression {
+module.exports = class Expression {
   constructor(expression) {
     this.expression = expression;
   }

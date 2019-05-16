@@ -1,5 +1,5 @@
 const expect = require("chai").expect;
-const Expression = require("../Expression").default;
+const Expression = require("../Expression");
 
 describe("Expression", function() {
   describe("arrayRemoveByIndex", function() {

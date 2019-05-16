@@ -34,6 +34,7 @@ app.use((error, req, res, next) => {
 // Routes
 app.post("/equal", equalController.send);
 app.put("/history", historyController.save);
+app.get("/history", historyController.get);
 
 mongoose
   .connect(dbLink, { useNewUrlParser: true })

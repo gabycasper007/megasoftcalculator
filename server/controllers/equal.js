@@ -1,4 +1,4 @@
-const Expression = require("../Expression").default;
+const Expression = require("../Expression");
 
 module.exports.send = (req, res, next) => {
   try {
