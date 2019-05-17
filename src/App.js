@@ -1,66 +1,11 @@
-import axios from "axios";
 import React, { Component } from "react";
 import "./App.css";
 import Keypad from "./components/Keypad";
-import * as helper from "./helper.js";
-import * as updaters from "./updaters";
+import ReportPanel from "./components/Reports/ReportPanel";
 
 class App extends Component {
-  state = { ...helper.initialState };
-
-  constructor(props) {
-    super(props);
-
-    this.axios = axios.create({
-      baseURL: `http://localhost:8080`,
-      timeout: 5000
-    });
-  }
-
-  handleClick = event => {
-    let clicked = event.target.name || "^";
-
-    if (helper.isOperation(clicked)) {
-      this.setState(state => updaters.setOperation(state, clicked));
-    } else if (helper.isDigit(clicked)) {
-      this.setState(state => updaters.setDigit(state, clicked));
-    } else if (["√", "∛", "log"].includes(clicked)) {
-      this.setState(state => updaters.setRootOrLog(state, clicked));
-    } else if (clicked === "AC") {
-      this.setState(updaters.reset);
-    } else if (clicked === ".") {
-      this.setState(updaters.setDecimalsSeparator);
-    } else if (clicked === "CE") {
-      this.setState(updaters.back);
-    } else if (clicked === "(") {
-      this.setState(updaters.openParenthesis);
-    } else if (clicked === ")") {
-      if (
-        this.state.parentheses.opened > this.state.parentheses.closed &&
-        !this.state.expression.endsWith("(")
-      ) {
-        this.setState(updaters.closeParenthesis);
-      }
-    } else if (clicked === "=") {
-      if (this.state.expression !== "0") {
-        this.handleEqual();
-      }
-    } else {
-      if (!this.state.expression.endsWith("(")) {
-        this.setState(state => updaters.setFactorialOrPower(state, clicked));
-      }
-    }
-  };
-
-  handleEqual = async () => {
-    try {
-      let response = await this.axios.post("/equal", {
-        expression: this.state.expression
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+  state = {
+    keyboardActive: false
   };
 
   activateKeyboard = () => {
@@ -89,14 +34,11 @@ class App extends Component {
           <h1>Megasoft Calculator</h1>
           <div id="copy">by Gabriel Vasile</div>
           <Keypad
-            onClick={this.handleClick}
-            expression={this.state.expression}
+            deactivateKeyboard={this.deactivateKeyboard}
             activateKeyboard={this.activateKeyboard}
-            cls={this.state.keyboardActive ? "active" : ""}
-            parentheses={this.state.parentheses}
-            onMouseDown={this.deactivateKeyboard}
-            onMouseUp={this.activateKeyboard}
+            keyboardActive={this.state.keyboardActive}
           />
+          <ReportPanel />
         </div>
       </div>
     );

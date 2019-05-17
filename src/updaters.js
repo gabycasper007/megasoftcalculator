@@ -86,7 +86,10 @@ const setRootOrLog = (state, operationType) => {
     state.expression = helper.removeLastCharacter(state.expression);
     state.decimals = false;
   }
-  if (helper.isDigit(helper.getLastCharacter(state.expression))) {
+  if (
+    helper.isDigit(helper.getLastCharacter(state.expression)) &&
+    state.expression !== "0"
+  ) {
     state.expression += "*";
   }
   return {
@@ -119,6 +122,12 @@ const setFactorialOrPower = (state, operationType) => {
 const openParenthesis = state => {
   if (state.expression.endsWith(".")) {
     state.expression = helper.removeLastCharacter(state.expression);
+  }
+  if (
+    !["", "0"].includes(state.expression) &&
+    helper.isDigit(helper.getLastCharacter(state.expression))
+  ) {
+    state.expression += "*";
   }
   return {
     decimals: false,

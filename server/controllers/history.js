@@ -17,21 +17,26 @@ module.exports.save = async (req, res, next) => {
 
 module.exports.get = async (req, res, next) => {
   try {
-    let report = 0;
-    if (req.query.report === "monthly") {
-      report = Now.getFirstDayOfMonth();
-    } else if (req.query.report === "weekly") {
-      report = Now.getLastMonday();
-    } else if (req.query.report === "daily") {
-      report = Now.getStartOfDay();
-    }
-    const histories = await HistoryModel.find()
-      .where("date_added")
-      .gt(report);
-    res.status(200).json(histories);
+    res.status(200).json(await getLastCalculations(req));
   } catch (error) {
     next(addStatusCode(error));
   }
+};
+
+const getLastCalculations = async req => {
+  let report = 0;
+
+  if (req.query.report === "monthly") {
+    report = Now.getFirstDayOfMonth();
+  } else if (req.query.report === "weekly") {
+    report = Now.getLastMonday();
+  } else if (req.query.report === "daily") {
+    report = Now.getStartOfDay();
+  }
+
+  return await HistoryModel.find()
+    .where("date_added")
+    .gt(report);
 };
 
 const addStatusCode = error => {

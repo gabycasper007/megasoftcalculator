@@ -1,5 +1,5 @@
 body {
-  font-family: arial,sans-serif;
+  font-family: "Open Sans", arial,sans-serif;
   color: #202124;
 }
 
@@ -15,8 +15,12 @@ body {
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 0;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0;
+}
+.reports h1 {
+  margin-bottom: 15px;
 }
 
 
@@ -126,4 +130,24 @@ sup {
 
 .balancedParenthesis {
   color: #ccc;
+}
+.report-buttons {
+  text-align: center;
+}
+.report-buttons button {
+  margin: 0 5px;
+}
+.calculations {
+  margin-top: 15px;
+}
+.calculation {
+  display: flex;
+  justify-content: space-between;
+}
+.date {
+  color: #555;
+  font-style: italic;
+}
+.commandAndResult {
+    font-size: 16px;
 }
