@@ -98,7 +98,9 @@ describe("Expression", function() {
   it("should calculate complex operations", function() {
     let testCases = [
       { given: "4!*√(4", result: 48 },
-      { given: "5+1.2+4!*√(4", result: 54.2 }
+      { given: "5+1.2+4!*√(4", result: 54.2 },
+      { given: "2*√(14^2)^-2", result: 0.0102040816 },
+      { given: "2*√(14^2)^-2*log(14!)", result: 0.1116368199 }
     ];
 
     checkTestCases(testCases);

@@ -39,7 +39,7 @@ module.exports = class Expression {
 
   splitParentheses(expression, start) {
     let end = start + expression.substr(start).indexOf(")");
-    let middle = expression.substr(start + 1, end - 1);
+    let middle = expression.substring(start + 1, end);
     let left;
 
     if (expression[start - 1] === "√") {

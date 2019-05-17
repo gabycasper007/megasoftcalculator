@@ -139,7 +139,10 @@ sup {
   margin: 0 5px;
 }
 .calculations {
-  margin-top: 15px;
+    margin-top: 15px;
+    max-height: 300px;
+    overflow: auto;
+    padding: 0 16px 10px;
 }
 .calculation {
   display: flex;

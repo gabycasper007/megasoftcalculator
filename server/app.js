@@ -2,6 +2,7 @@ const express = require("express");
 const equalController = require("./controllers/equal");
 const historyController = require("./controllers/history");
 const bodyParser = require("body-parser");
+const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
@@ -15,6 +16,7 @@ const dbLink =
 const app = express();
 const port = 8080;
 
+app.use(express.static(path.join(__dirname, "../build")));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(

@@ -2,13 +2,13 @@
 
 This app uses [Node](https://nodejs.org), [Express](https://expressjs.com/), [React](https://reactjs.org/) and [Mongoose](https://mongoosejs.com/).
 Once you have `npm` installed, you need to install app dependencies.
-Run the next command in the project directory: `npm run mern` . This will install dependencies for both front and back end.
+Run the next command in the project root directory: `npm run mern` . This will install dependencies for both front and back end.
 
 # Starting the app
 
 This app was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-To start React run `npm start` in the project directory. React will use port `3000` .
+To start React run `npm start` in the project root directory. React will use port `3000` .
 To start Node run `npm run server` in the same folder as before. Node will use port `8080` .
 
 Checkout the [API Documentation](https://documenter.getpostman.com/view/5509767/S1M2T6e4?version=latest)
@@ -39,4 +39,4 @@ Checkout the [API Documentation](https://documenter.getpostman.com/view/5509767/
 
 # Testing the app
 
-Run `npm test` in the project folder. This will test both front and back end. If you want to test them individually, you can run `npm run test-react` or `npm run test-server`.
+Run `npm test` in the project root directory. This will test both front and back end. If you want to test them individually, you can run `npm run test-react` or `npm run test-server`.
