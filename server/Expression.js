@@ -112,16 +112,18 @@ module.exports = class Expression {
         expression,
         lastIndexOfFact
       );
+      let rightSide = expression.slice(lastIndexOfFact + 1);
 
       return (
         expression.slice(0, start) +
         this.calculateMultiFactorial(
           newExpression,
-          this.getFactorialType(expression, newExpression, start)
+          this.getFactorialType(expression, lastIndexOfFact)
         ) +
-        expression.slice(lastIndexOfFact + 1)
+        rightSide
       );
     }
+
     return expression;
   }
 
@@ -135,15 +137,14 @@ module.exports = class Expression {
       }
       start--;
     }
-
     return [expression.slice(start, firstIndexOfFact), start];
   }
 
   // Factorial can be double !!, triple !!!, etc.
-  getFactorialType(expression, newExpression, start) {
-    let multi = expression.length - newExpression.length;
-    if (expression[start - 1] === "-") {
-      multi--;
+  getFactorialType(expression, start) {
+    let multi = 1;
+    for (let i = start; i > 0 && expression[i - 1] === "!"; i--) {
+      multi++;
     }
     return multi;
   }

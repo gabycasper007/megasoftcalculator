@@ -3,6 +3,7 @@ const equalController = require("./controllers/equal");
 const historyController = require("./controllers/history");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const DB_USER = process.env.DB_USER || "gabriellvasile";
 const DB_NAME = process.env.DB_NAME || "calculator";

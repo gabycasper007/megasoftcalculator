@@ -87,7 +87,8 @@ const setRootOrLog = (state, operationType) => {
     state.decimals = false;
   }
   if (
-    helper.isDigit(helper.getLastCharacter(state.expression)) &&
+    (helper.isDigit(helper.getLastCharacter(state.expression)) ||
+      helper.getLastCharacter(state.expression) === "!") &&
     state.expression !== "0"
   ) {
     state.expression += "*";

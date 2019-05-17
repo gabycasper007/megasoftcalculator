@@ -95,6 +95,15 @@ describe("Expression", function() {
     checkTestCases(testCases);
   });
 
+  it("should calculate complex operations", function() {
+    let testCases = [
+      { given: "4!*√(4", result: 48 },
+      { given: "5+1.2+4!*√(4", result: 54.2 }
+    ];
+
+    checkTestCases(testCases);
+  });
+
   it("should handle parenthesis", function() {
     let testCases = [
       { given: "(6+5)", result: 11 },
@@ -176,6 +185,7 @@ describe("Expression", function() {
       { given: "-5.9!", result: -597.3851550984 },
       { given: "-0.4!", result: -0.8767180971 }
     ];
+    checkTestCases(testCases);
   });
 
   it("should calculate power", function() {
