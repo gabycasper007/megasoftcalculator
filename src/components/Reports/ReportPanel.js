@@ -23,7 +23,9 @@ class ReportPanel extends Component {
 
   formatDate(date) {
     date = new Date(date);
+    date = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
     date = date.toLocaleString("en-SG", {
+      timeZone: "Asia/Singapore",
       year: "numeric",
       month: "long",
       day: "numeric",

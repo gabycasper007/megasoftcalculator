@@ -63,10 +63,12 @@ class KeyPad extends PureComponent {
   };
 
   saveCalculation = async (expression, result) => {
-    await axios.put("/history", {
-      command: expression,
-      result
-    });
+    if (expression !== result) {
+      await axios.put("/history", {
+        command: expression,
+        result
+      });
+    }
   };
 
   render() {
@@ -85,25 +87,29 @@ class KeyPad extends PureComponent {
     }
 
     return (
-      <div className="calculator">
-        <div
-          className={cx("display", { active: this.props.keyboardActive })}
-          onClick={this.props.activateKeyboard}
-        >
-          <div className="expression">
-            {this.state.expression}
-            <span className="balancedParenthesis">{closedP}</span>
+      <div className="mega">
+        <h1>Megasoft Calculator</h1>
+        <div id="copy">by Gabriel Vasile</div>
+        <div className="calculator">
+          <div
+            className={cx("display", { active: this.props.keyboardActive })}
+            onClick={this.props.activateKeyboard}
+          >
+            <div className="expression">
+              {this.state.expression}
+              <span className="balancedParenthesis">{closedP}</span>
+            </div>
           </div>
+          {buttons.map(button => (
+            <Button
+              name={button}
+              key={button}
+              onClick={this.handleClick}
+              onMouseDown={this.props.deactivateKeyboard}
+              onMouseUp={this.props.activateKeyboard}
+            />
+          ))}
         </div>
-        {buttons.map(button => (
-          <Button
-            name={button}
-            key={button}
-            onClick={this.handleClick}
-            onMouseDown={this.props.deactivateKeyboard}
-            onMouseUp={this.props.activateKeyboard}
-          />
-        ))}
       </div>
     );
   }

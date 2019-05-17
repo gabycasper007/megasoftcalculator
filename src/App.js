@@ -30,16 +30,12 @@ class App extends Component {
   render = () => {
     return (
       <div className="App" onClick={this.deactivateKeyboard}>
-        <div className="wrap">
-          <h1>Megasoft Calculator</h1>
-          <div id="copy">by Gabriel Vasile</div>
-          <Keypad
-            deactivateKeyboard={this.deactivateKeyboard}
-            activateKeyboard={this.activateKeyboard}
-            keyboardActive={this.state.keyboardActive}
-          />
-          <ReportPanel />
-        </div>
+        <Keypad
+          deactivateKeyboard={this.deactivateKeyboard}
+          activateKeyboard={this.activateKeyboard}
+          keyboardActive={this.state.keyboardActive}
+        />
+        <ReportPanel />
       </div>
     );
   };
