@@ -9,6 +9,7 @@ WORKDIR /var/www/megasoftcalculator
 COPY package*.json ./
 
 RUN npm ci --only=production
+RUN npm install -g pm2
 
 # Bundle app source
 COPY . .

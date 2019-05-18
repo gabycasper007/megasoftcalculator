@@ -43,7 +43,7 @@ pipeline {
         stage('Run Container on Dev Server') {
           steps {
             sshagent(['prod-server']) {
-              sh "ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-250-35-17.ap-southeast-1.compute.amazonaws.com ${dockerRun}"
+              sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.17.152 ${dockerRun}"
             }
           }
         }
