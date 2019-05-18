@@ -3,6 +3,7 @@ pipeline {
     tools {nodejs "node"}
     environment {
         CI = 'true'
+        dockerRun = 'docker run -p 8080:8080 -d --name calculator gabriellvasile/calculator'
     }
     stages {
         stage('SCM Checkout') {
@@ -10,19 +11,25 @@ pipeline {
                 git 'https://github.com/gabycasper007/megasoftcalulator'
             }
         }
-        stage('Build') { 
+        stage('Install') { 
             steps {
                 sh 'npm run mern' 
             }
         }
         stage('Test') {
             steps {
-                sh 'CI=true npm test'
+                sh "CI=${CI} npm test"
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'npm run build --prod'
+                sh 'rm -rf src'
             }
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t gabriellvasile/calculator:1.0.0 .'
+                sh 'docker build -t gabriellvasile/calculator:latest .'
             }
         }
         stage('Push Docker Image') {
@@ -30,8 +37,15 @@ pipeline {
                 withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPwd')]) {
                     sh "docker login -u gabriellvasile -p ${dockerHubPwd}"
                 }
-                sh 'docker push gabriellvasile/calculator:1.0.0'
+                sh 'docker push gabriellvasile/calculator:latest'
             }
+        }
+        stage('Run Container on Dev Server') {
+          steps {
+            sshagent(['prod-server']) {
+              sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.17.152 ${dockerRun}"
+            }
+          }
         }
     }
 }
