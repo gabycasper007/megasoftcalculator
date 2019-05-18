@@ -15,7 +15,7 @@
     "server": "cd server && npm start",
     "build": "react-scripts build",
     "test": "cd server && npm test && cd .. && npm run test-react",
-    "test-react": "react-scripts test --passWithNoTests",
+    "test-react": "react-scripts test --passWithNoTests --watchAll=false",
     "test-server": "cd server && npm test",
     "eject": "react-scripts eject"
   },
