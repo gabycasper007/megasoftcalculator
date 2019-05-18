@@ -10,7 +10,8 @@ COPY package*.json ./
 
 RUN npm ci --only=production
 RUN npm install -g pm2
-RUN npm run mern
+RUN npm install
+RUN cd /server && npm install
 
 # Bundle app source
 COPY . .
