@@ -16,6 +16,7 @@ WORKDIR /var/www/megasoftcalculator/server
 RUN npm install
 
 # Bundle app source
+WORKDIR /var/www/megasoftcalculator
 COPY . .
 
 EXPOSE 8090
