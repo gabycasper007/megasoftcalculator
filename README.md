@@ -9,7 +9,7 @@ Run the next command in the project root directory: `npm run mern` . This will i
 This app was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 To start React run `npm start` in the project root directory. React will use port `3000` .
-To start Node run `npm run server` in the same folder as before. Node will use port `8080` .
+To start Node run `npm run server` in the same folder as before. Node will use port `8090` .
 
 Checkout the [API Documentation](https://documenter.getpostman.com/view/5509767/S1M2T6e4?version=latest)
 

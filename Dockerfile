@@ -13,5 +13,5 @@ RUN npm ci --only=production
 # Bundle app source
 COPY . .
 
-EXPOSE 8080
-CMD [ "mp2", "start", "erver/app.js" ]
+EXPOSE 8090
+CMD [ "pm2", "start", "server/app.js" ]
