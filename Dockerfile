@@ -1,7 +1,7 @@
 FROM node:8
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /var/www/megasoftcalculator
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -14,4 +14,4 @@ RUN npm ci --only=production
 COPY . .
 
 EXPOSE 8080
-CMD [ "npm", "run", "server" ]
+CMD [ "mp2", "start", "erver/app.js" ]
