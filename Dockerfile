@@ -16,4 +16,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 8090
-CMD [ "pm2-runtime", "start", "server/app.js" ]
+CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
