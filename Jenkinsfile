@@ -3,7 +3,7 @@ pipeline {
     tools {nodejs "node"}
     environment {
         CI = 'true'
-        dockerRun = 'docker stop calculator || true && docker rm calculator || true && docker run -p 8090:8090 -d --name calculator gabriellvasile/calculator'
+        dockerRun = 'docker stop calculator || true && docker rm -f calculator || true && docker image rm gabriellvasile/calculator || true && docker run -p 8090:8090 -d --name calculator gabriellvasile/calculator'
     }
     stages {
         stage('SCM Checkout') {
