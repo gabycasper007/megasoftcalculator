@@ -39,5 +39,4 @@ Checkout the [API Documentation](https://documenter.getpostman.com/view/5509767/
 
 # Testing the app
 
-Run `npm test` in the project root directory. This will test both front and back end.
-If you want to test them individually, you can run `npm run test-react` or `npm run test-server`.
+Run `npm test` in the project root directory. This will test both front and back end. If you want to test them individually, you can run `npm run test-react` or `npm run test-server`.
