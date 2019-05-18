@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('SCM Checkout') {
             steps {
-                git 'https://github.com/gabycasper007/megasoftcalulator'
+                git 'https://github.com/gabycasper007/megasoftcalculator'
             }
         }
         stage('Install') { 
