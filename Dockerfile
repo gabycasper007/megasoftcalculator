@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:11.10.0
 
 # Create app directory
 WORKDIR /var/www/megasoftcalculator
@@ -10,6 +10,7 @@ COPY package*.json ./
 
 RUN npm ci --only=production
 RUN npm install -g pm2
+RUN npm install
 
 # Bundle app source
 COPY . .
