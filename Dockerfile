@@ -10,9 +10,11 @@ COPY package*.json ./
 
 RUN npm ci --only=production
 RUN npm install -g pm2
+RUN rm -rf node_modules
 RUN npm install
 
 WORKDIR /var/www/megasoftcalculator/server
+RUN rm -rf node_modules
 RUN npm install
 
 # Bundle app source
