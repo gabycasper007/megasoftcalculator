@@ -3,9 +3,6 @@ pipeline {
     tools {nodejs "node"}
     environment {
         CI = 'true'
-        // dockerRun = 'docker-compose up --force-recreate --build -d'
-        dockerRun = 'docker-compose pull && docker-compose up --force-recreate --build -d'
-        // // // dockerRun = 'docker stop calculator-frontend || true && docker rm -f calculator-frontend || true && docker image rm gabriellvasile/calculator-frontend || true && docker stop calculator-frontend || true && docker rm -f calculator-frontend || true && docker image rm gabriellvasile/calculator-frontend || true'
     }
     stages {
         stage('SCM Checkout') {
@@ -31,12 +28,6 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                // docker-compose -f docker-compose.yml up --build
-                // docker tag calculator-dt1_backend gabriellvasile/calculator:latest
-                // sh 'docker build -t gabriellvasile/calculator:latest .'
-                // sh 'docker-compose build'
-                // sh 'docker tag calculator-dt1_backend gabriellvasile/calculator:latest'
-
                 sh 'docker build -t gabriellvasile/calculator-frontend:latest ./'
                 sh 'docker build -t gabriellvasile/calculator:latest ./server'
             }
@@ -55,7 +46,7 @@ pipeline {
         stage('Run Container on Dev Server') {
           steps {
             sshagent(['prod-server']) {
-              sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.17.152 ${dockerRun}"
+              sh "curl https://raw.githubusercontent.com/gabycasper007/megasoftcalculator/master/server.sh | ssh -o StrictHostKeyChecking=no ubuntu@172.31.17.152"
             }
           }
         }

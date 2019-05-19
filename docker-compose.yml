@@ -6,7 +6,7 @@ services:
     tty: true
     stdin_open: true
     ports:
-      - "27017:27017"
+      - 27017:27017
   frontend:
     image: gabriellvasile/calculator-frontend:latest
     container_name: calculator-frontend
