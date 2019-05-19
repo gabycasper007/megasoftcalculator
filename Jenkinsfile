@@ -36,8 +36,8 @@ pipeline {
                 // sh 'docker-compose build'
                 // sh 'docker tag calculator-dt1_backend gabriellvasile/calculator:latest'
 
-                sh 'docker build -t  gabriellvasile/calculator-frontend:latest ./'
-                sh 'docker build -t  gabriellvasile/calculator:latest ./'
+                sh 'docker build -t gabriellvasile/calculator-frontend:latest ./'
+                sh 'docker build -t gabriellvasile/calculator:latest ./server'
             }
         }
         stage('Push Docker Image') {
@@ -47,6 +47,8 @@ pipeline {
                 }
                 sh 'docker push gabriellvasile/calculator-frontend:latest'
                 sh 'docker push gabriellvasile/calculator:latest'
+                sh 'docker image rm gabriellvasile/calculator-frontend:latest'
+                sh 'docker image rm gabriellvasile/calculator:latest'
             }
         }
         stage('Run Container on Dev Server') {
