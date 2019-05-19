@@ -3,8 +3,7 @@ pipeline {
     tools {nodejs "node"}
     environment {
         CI = 'true'
-        dockerRun = 'docker-compose up --force-recreate --build -d'
-        // dockerRun = 'docker stop calculator-frontend || true && docker rm -f calculator-frontend || true && docker image rm gabriellvasile/calculator-frontend || true && docker run -p 80:80 -d --name calculator-frontend gabriellvasile/calculator-frontend:latest'
+        dockerRun = 'docker stop calculator-frontend || true && docker rm -f calculator-frontend || true && docker image rm gabriellvasile/calculator-frontend || true && docker stop calculator || true && docker rm -f calculator || true && docker image rm gabriellvasile/calculator || true && docker-compose up --force-recreate --build -d'
     }
     stages {
         stage('SCM Checkout') {
