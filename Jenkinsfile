@@ -4,7 +4,7 @@ pipeline {
     environment {
         CI = 'true'
         // dockerRun = 'docker-compose up --force-recreate --build -d'
-        dockerRun = 'docker image rm -f gabriellvasile/calculator-frontend && docker image rm -f gabriellvasile/calculator && docker-compose up --force-recreate --build -d'
+        dockerRun = 'docker-compose pull && docker-compose up --force-recreate --build -d'
         // // // dockerRun = 'docker stop calculator-frontend || true && docker rm -f calculator-frontend || true && docker image rm gabriellvasile/calculator-frontend || true && docker stop calculator-frontend || true && docker rm -f calculator-frontend || true && docker image rm gabriellvasile/calculator-frontend || true'
     }
     stages {
