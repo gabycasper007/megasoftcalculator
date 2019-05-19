@@ -3,7 +3,8 @@ pipeline {
     tools {nodejs "node"}
     environment {
         CI = 'true'
-        dockerRun = 'docker stop calculator || true && docker rm -f calculator || true && docker image rm gabriellvasile/calculator || true && docker run -p 8090:8090 -d --name calculator gabriellvasile/calculator'
+        dockerRun = 'docker-compose up --force-recreate --build -d'
+        // dockerRun = 'docker stop calculator-frontend || true && docker rm -f calculator-frontend || true && docker image rm gabriellvasile/calculator-frontend || true && docker run -p 80:80 -d --name calculator-frontend gabriellvasile/calculator-frontend:latest'
     }
     stages {
         stage('SCM Checkout') {
@@ -29,7 +30,14 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t gabriellvasile/calculator:latest .'
+                // docker-compose -f docker-compose.yml up --build
+                // docker tag calculator-dt1_backend gabriellvasile/calculator:latest
+                // sh 'docker build -t gabriellvasile/calculator:latest .'
+                // sh 'docker-compose build'
+                // sh 'docker tag calculator-dt1_backend gabriellvasile/calculator:latest'
+
+                sh 'docker build -t  gabriellvasile/calculator-frontend:latest ./'
+                sh 'docker build -t  gabriellvasile/calculator:latest ./'
             }
         }
         stage('Push Docker Image') {
@@ -37,6 +45,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPwd')]) {
                     sh "docker login -u gabriellvasile -p ${dockerHubPwd}"
                 }
+                sh 'docker push gabriellvasile/calculator-frontend:latest'
                 sh 'docker push gabriellvasile/calculator:latest'
             }
         }

@@ -1,25 +1,12 @@
-FROM node:11.10.0
+FROM node:alpine as builder
+RUN mkdir -p /usr/share/html/
+WORKDIR /usr/share/html/
+COPY . /usr/share/html/
+RUN npm install --production=true
 
-# Create app directory
-WORKDIR /var/www/megasoftcalculator
-
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-RUN npm ci --only=production
-RUN npm install -g pm2
-RUN rm -rf node_modules
-RUN npm install
-
-WORKDIR /var/www/megasoftcalculator/server
-RUN rm -rf node_modules
-RUN npm install
-
-# Bundle app source
-WORKDIR /var/www/megasoftcalculator
-COPY . .
-
-EXPOSE 8090
-CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
+FROM nginx:1.15.2-alpine as nginx
+COPY --from=builder /usr/share/html/build/ /usr/share/nginx/html
+COPY --from=builder /usr/share/html/nginx.conf /etc/nginx/conf.d/default.conf
+VOLUME /usr/share/nginx/html
+VOLUME /etc/nginx
+EXPOSE 80

@@ -1,0 +1,27 @@
+version: "2"
+services:
+  mongodb:
+    image: "mongo"
+    container_name: mongo
+    tty: true
+    stdin_open: true
+    ports:
+      - "27017:27017"
+  frontend:
+    image: gabriellvasile/calculator-frontend:latest
+    container_name: calculator-frontend
+    tty: true
+    stdin_open: true
+    ports:
+      - 80:80
+      - 443:443
+  backend:
+    image: gabriellvasile/calculator:latest
+    container_name: calculator
+    tty: true
+    stdin_open: true
+    ports:
+      - 8090:8090
+    depends_on:
+      - mongodb
+      - frontend
