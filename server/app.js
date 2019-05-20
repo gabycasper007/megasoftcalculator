@@ -14,7 +14,7 @@ const dbLink =
   `mongodb+srv://${DB_USER}:${DB_PASSWORD}@mongotut-sxsgb.mongodb.net/${DB_NAME}?retryWrites=true`;
 
 const app = express();
-const port = 8090;
+const port = process.env.SERVER_PORT || 8090;
 
 app.use(express.static(path.join(__dirname, "../build")));
 app.use((req, res, next) => {

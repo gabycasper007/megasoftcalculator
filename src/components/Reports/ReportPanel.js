@@ -54,9 +54,9 @@ class ReportPanel extends Component {
         </div>
 
         <div className="calculations">
-          {this.state.calculations.map(calculation => (
+          {this.state.calculations.map((calculation, index) => (
             <Report
-              key={calculation.date_added + calculation.result}
+              key={calculation.date_added + index}
               calculation={calculation}
             />
           ))}
